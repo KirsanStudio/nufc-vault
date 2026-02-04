@@ -94,6 +94,14 @@ app.get("/api/table", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+app.get("/health", (req, res) => {
+  res.json({
+    ok: true,
+    port: PORT,
+    hasToken: Boolean(API_TOKEN),
+  });
+});
+
 
 // =============================
 // FALLBACK (404)
