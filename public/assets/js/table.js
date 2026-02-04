@@ -1,99 +1,91 @@
-const ui = {
-  body: document.getElementById("plBody"),
-  status: document.getElementById("tableStatus"),
-  updatedAt: document.getElementById("updatedAt"),
-  refresh: document.getElementById("refreshTable"),
-};
+// public/assets/js/table.js
+(async function () {
+  const statusEl = document.getElementById("statusText");
+  const updatedEl = document.getElementById("lastUpdated");
+  const tbody = document.getElementById("tableBody");
+  const refreshBtn = document.getElementById("refreshBtn");
 
-function setStatus(text) {
-  if (ui.status) ui.status.textContent = text;
-}
-
-function fmtUpdated(iso) {
-  try {
-    return new Date(iso).toLocaleString();
-  } catch {
-    return iso;
-  }
-}
-
-function formDots(form) {
-  // football-data gives form like "W,W,D,L,W" sometimes
-  if (!form || typeof form !== "string") return "—";
-  const parts = form.split(",").slice(0, 5);
-  return parts.map(x => x.trim()).filter(Boolean).join(" ");
-}
-
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[m]));
-}
-
-function render(table) {
-  if (!ui.body) return;
-
-  if (!table || table.length === 0) {
-    ui.body.innerHTML = `<tr><td colspan="11" class="muted">No table data returned.</td></tr>`;
-    return;
+  function setStatus(msg) {
+    if (statusEl) statusEl.textContent = msg;
   }
 
-  ui.body.innerHTML = table.map(row => {
-    const pos = row.position ?? "";
-    const name = row.team?.name ?? "—";
-    const played = row.playedGames ?? "—";
-    const won = row.won ?? "—";
-    const draw = row.draw ?? "—";
-    const lost = row.lost ?? "—";
-    const gf = row.goalsFor ?? "—";
-    const ga = row.goalsAgainst ?? "—";
-    const gd = row.goalDifference ?? "—";
-    const pts = row.points ?? "—";
-    const form = formDots(row.form);
+  function fmtUpdated(d) {
+    try {
+      return new Date(d).toLocaleString();
+    } catch {
+      return "—";
+    }
+  }
 
-    // highlight Newcastle row subtly
-    const isNUFC = (name.toLowerCase().includes("newcastle"));
-    const cls = isNUFC ? " class=\"nufc-row\"" : "";
+  function formDots(formStr) {
+    // football-data often returns null on free tier
+    if (!formStr) return "—";
+    // format like "W,W,D,L,W"
+    return formStr
+      .split(",")
+      .slice(-5)
+      .map(r => r.trim().toUpperCase())
+      .join(" ");
+  }
 
-    return `
-      <tr${cls}>
-        <td class="col-pos">${esc(pos)}</td>
-        <td class="club">${esc(name)}</td>
-        <td class="col-num">${esc(played)}</td>
-        <td class="col-num">${esc(won)}</td>
-        <td class="col-num">${esc(draw)}</td>
-        <td class="col-num">${esc(lost)}</td>
-        <td class="col-num">${esc(gf)}</td>
-        <td class="col-num">${esc(ga)}</td>
-        <td class="col-num">${esc(gd)}</td>
-        <td class="col-num pts">${esc(pts)}</td>
-        <td class="col-form">${esc(form)}</td>
-      </tr>
-    `;
-  }).join("");
-}
+  function render(rows) {
+    tbody.innerHTML = "";
 
-async function loadTable() {
-  try {
-    setStatus("Loading Premier League table…");
-
-    const res = await fetch("/api/pl/table", { cache: "no-store" });
-    const data = await res.json();
-
-    if (!res.ok || data.error) {
-      throw new Error(data.message || `HTTP ${res.status}`);
+    if (!Array.isArray(rows) || rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="10">No table data returned.</td></tr>`;
+      return;
     }
 
-    if (ui.updatedAt) ui.updatedAt.textContent = fmtUpdated(data.fetchedAt);
-    setStatus("Standings updated.");
-    render(data.table);
-  } catch (e) {
-    console.error(e);
-    setStatus("Couldn’t load table. If you hit a rate limit, wait ~30 seconds then refresh.");
-    render([]);
+    for (const r of rows) {
+      const isNUFC = r.team?.id === 67; // Newcastle ID
+      const tr = document.createElement("tr");
+      if (isNUFC) tr.classList.add("nufc-row");
+
+      tr.innerHTML = `
+        <td class="col-pos">${r.position ?? ""}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="${r.team?.crest ?? ""}" alt="" width="22" height="22" style="border-radius:6px;background:rgba(255,255,255,.08);padding:2px" />
+            <span class="club">${r.team?.name ?? ""}</span>
+          </div>
+        </td>
+        <td class="col-num">${r.playedGames ?? ""}</td>
+        <td class="col-num">${r.won ?? ""}</td>
+        <td class="col-num">${r.draw ?? ""}</td>
+        <td class="col-num">${r.lost ?? ""}</td>
+        <td class="col-num">${r.goalsFor ?? ""}</td>
+        <td class="col-num">${r.goalsAgainst ?? ""}</td>
+        <td class="col-num">${r.goalDifference ?? ""}</td>
+        <td class="col-num pts">${r.points ?? ""}</td>
+      `;
+
+      tbody.appendChild(tr);
+    }
   }
-}
 
-if (ui.refresh) ui.refresh.addEventListener("click", loadTable);
+  async function load() {
+    setStatus("Loading table…");
 
-loadTable();
+    try {
+      const res = await fetch("/api/table", { cache: "no-store" });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`${res.status} ${t}`);
+      }
+
+      const rows = await res.json();
+      render(rows);
+      setStatus("Standings loaded.");
+      if (updatedEl) updatedEl.textContent = fmtUpdated(new Date());
+    } catch (err) {
+      console.error(err);
+      setStatus("Couldn't load table. If you hit a rate limit, wait ~30 seconds then refresh.");
+      tbody.innerHTML = `<tr><td colspan="10">No table data returned.</td></tr>`;
+      if (updatedEl) updatedEl.textContent = "—";
+    }
+  }
+
+  if (refreshBtn) refreshBtn.addEventListener("click", load);
+
+  load();
+})();
