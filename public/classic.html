@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NUFC Vault • Classic Matches</title>
+  <meta name="description" content="Classic Newcastle United matches, embedded video." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/main.js"></script>
+  <script defer src="assets/js/ticker.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Homepage">
+        <span class="brand-badge">NUFC</span>
+        <span class="brand-text">Vault • Matchday Edition</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Toggle menu</span>
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="next.html">Next Match</a>
+        <a class="nav-link" href="table.html">PL Table</a>
+        <a class="nav-link is-active" href="classic.html">Classic Matches</a>
+        <a class="nav-link" href="live.html">Live Scores</a>
+      </nav>
+
+      <div class="matchday-ticker" id="matchdayTicker" aria-live="polite">
+        <span class="ticker-dot" aria-hidden="true"></span>
+        <span class="ticker-text" id="tickerText">Loading next match…</span>
+        <span class="ticker-time" id="tickerTime">—</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container page">
+    <header class="page-head">
+      <h1>Classic Matches</h1>
+      <p class="lede">The vault: iconic games you’ll watch a hundred times and still get goosebumps.</p>
+    </header>
+
+    <section class="match-list">
+      <article class="match-card" id="nufc-arsenal-2011">
+        <div class="match-meta">
+          <h2>Newcastle 4–4 Arsenal</h2>
+          <p class="muted">Premier League — 5 February 2011</p>
+          <div class="tags">
+            <span class="tag">The Comeback</span>
+            <span class="tag">St James’ Park</span>
+            <span class="tag">Classic</span>
+          </div>
+        </div>
+
+        <div class="video">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/7RhqDYJHykA"
+            title="Newcastle 4-4 Arsenal"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      <p class="muted">Add more classics by duplicating the match card and changing the YouTube embed.</p>
+    </footer>
+  </main>
+</body>
+</html>

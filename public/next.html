@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NUFC Vault • Next Match</title>
+  <meta name="description" content="Next Newcastle United match: countdown, competition, kickoff time." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/main.js"></script>
+  <script defer src="assets/js/ticker.js"></script>
+  <script defer src="assets/js/next.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Homepage">
+        <span class="brand-badge">NUFC</span>
+        <span class="brand-text">Vault • Matchday Edition</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Toggle menu</span>
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link is-active" href="next.html">Next Match</a>
+        <a class="nav-link" href="table.html">PL Table</a>
+        <a class="nav-link" href="classic.html">Classic Matches</a>
+        <a class="nav-link" href="live.html">Live Scores</a>
+      </nav>
+
+      <div class="matchday-ticker" id="matchdayTicker" aria-live="polite">
+        <span class="ticker-dot" aria-hidden="true"></span>
+        <span class="ticker-text" id="tickerText">Loading next match…</span>
+        <span class="ticker-time" id="tickerTime">—</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container page">
+    <header class="page-head">
+      <h1>Next Match</h1>
+      <p class="lede">Countdown to kick-off, competition, and match details — auto-updated.</p>
+      <p class="muted small">Tip: keep your server running and this page stays live.</p>
+    </header>
+
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Countdown</p>
+          <h2 id="nextTitle">Loading…</h2>
+          <p id="nextMeta" class="muted">Checking fixtures…</p>
+
+          <div class="info-strip">
+            <div class="pill">Kick-off in: <strong id="countdown">—</strong></div>
+            <div class="pill">Local time: <strong id="kickoffLocal">—</strong></div>
+            <div class="pill">Competition: <strong id="competition">—</strong></div>
+          </div>
+
+          <div class="hero-actions">
+            <button id="refreshNext" class="button button-small" type="button">Refresh</button>
+            <a class="button button-ghost" href="live.html">Go to Live Scores</a>
+          </div>
+
+          <p id="statusLine" class="muted small"></p>
+        </div>
+
+        <aside class="card">
+          <h2 class="card-title">Quick view</h2>
+          <pre class="muted small" id="quickView" style="white-space:pre-wrap;margin:0;">Loading…</pre>
+        </aside>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p class="muted small">Next up: fixtures list + results page using the same data feed.</p>
+    </footer>
+  </main>
+</body>
+</html>

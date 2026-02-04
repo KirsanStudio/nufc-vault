@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NUFC Vault • Matchday Edition</title>
+  <meta name="description" content="Newcastle United fan site: next match, PL table, classics and live scores." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/main.js"></script>
+  <script defer src="assets/js/ticker.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Homepage">
+        <span class="brand-badge">NUFC</span>
+        <span class="brand-text">Vault • Matchday Edition</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Toggle menu</span>
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a class="nav-link is-active" href="index.html">Home</a>
+        <a class="nav-link" href="next.html">Next Match</a>
+        <a class="nav-link" href="table.html">PL Table</a>
+        <a class="nav-link" href="classic.html">Classic Matches</a>
+        <a class="nav-link" href="live.html">Live Scores</a>
+      </nav>
+
+      <div class="matchday-ticker" id="matchdayTicker" aria-live="polite">
+        <span class="ticker-dot" aria-hidden="true"></span>
+        <span class="ticker-text" id="tickerText">Loading next match…</span>
+        <span class="ticker-time" id="tickerTime">—</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Black & White • Match Vault • Live Updates</p>
+          <h1>Newcastle United fan hub</h1>
+          <p class="lede">
+            Matchday visuals, the Premier League table, a growing classics vault, and live updates.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button" href="next.html">Next Match</a>
+            <a class="button button-ghost" href="table.html">PL Table</a>
+            <a class="button button-ghost" href="live.html">Live Scores</a>
+          </div>
+
+          <div class="info-strip">
+            <div class="pill">⚫⚪ Matchday look</div>
+            <div class="pill">📊 PL table</div>
+            <div class="pill">⏳ Countdown ticker</div>
+          </div>
+        </div>
+
+        <aside class="card">
+          <h2 class="card-title">Quick links</h2>
+          <p class="muted">Jump to the next fixture or check the table.</p>
+          <div class="hero-actions" style="margin:10px 0 0;">
+            <a class="button button-small" href="next.html">Next Match</a>
+            <a class="button button-small button-ghost" href="table.html">PL Table</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="grid grid-3 section">
+      <article class="feature">
+        <h3>Next Match</h3>
+        <p class="muted">Countdown + match details auto-updated.</p>
+      </article>
+      <article class="feature">
+        <h3>Premier League Table</h3>
+        <p class="muted">Standings page with NUFC highlighted.</p>
+      </article>
+      <article class="feature">
+        <h3>Live Scores</h3>
+        <p class="muted">Refreshes faster when matches are live.</p>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      <p>© <span id="year"></span> NUFC Vault (fan site)</p>
+    </footer>
+  </main>
+</body>
+</html>

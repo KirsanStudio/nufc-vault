@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NUFC Vault • Premier League Table</title>
+  <meta name="description" content="Premier League standings table." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/main.js"></script>
+  <script defer src="assets/js/ticker.js"></script>
+  <script defer src="assets/js/table.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Homepage">
+        <span class="brand-badge">NUFC</span>
+        <span class="brand-text">Vault • Matchday Edition</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Toggle menu</span>
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="next.html">Next Match</a>
+        <a class="nav-link is-active" href="table.html">PL Table</a>
+        <a class="nav-link" href="classic.html">Classic Matches</a>
+        <a class="nav-link" href="live.html">Live Scores</a>
+      </nav>
+
+      <div class="matchday-ticker" id="matchdayTicker" aria-live="polite">
+        <span class="ticker-dot" aria-hidden="true"></span>
+        <span class="ticker-text" id="tickerText">Loading next match…</span>
+        <span class="ticker-time" id="tickerTime">—</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container page">
+    <header class="page-head">
+      <h1>Premier League Table</h1>
+      <p class="lede">Live standings pulled from football-data.org (cached to avoid rate limits).</p>
+      <p class="muted small">Last updated: <span id="updatedAt">—</span></p>
+    </header>
+
+    <section class="card">
+      <div class="row">
+        <div>
+          <h2 class="card-title">Standings</h2>
+          <p id="tableStatus" class="muted">Loading…</p>
+        </div>
+        <div class="right">
+          <button id="refreshTable" class="button button-small" type="button">Refresh</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="table-wrap">
+        <table class="pl-table" aria-describedby="tableStatus">
+          <thead>
+            <tr>
+              <th class="col-pos">#</th>
+              <th>Club</th>
+              <th class="col-num">P</th>
+              <th class="col-num">W</th>
+              <th class="col-num">D</th>
+              <th class="col-num">L</th>
+              <th class="col-num">GF</th>
+              <th class="col-num">GA</th>
+              <th class="col-num">GD</th>
+              <th class="col-num">Pts</th>
+              <th class="col-form">Form</th>
+            </tr>
+          </thead>
+          <tbody id="plBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p class="muted small">Next: fixtures page + results page.</p>
+    </footer>
+  </main>
+</body>
+</html>
