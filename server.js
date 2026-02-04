@@ -101,6 +101,27 @@ app.get("/health", (req, res) => {
     hasToken: Boolean(API_TOKEN),
   });
 });
+// Next 5 scheduled matches
+app.get("/api/upcoming", async (req, res) => {
+  try {
+    const limit = Number(req.query.limit || 5);
+    const data = await fdFetch(`/teams/67/matches?status=SCHEDULED&limit=${limit}`);
+    res.json(data.matches || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Previous 2 finished matches
+app.get("/api/recent", async (req, res) => {
+  try {
+    const limit = Number(req.query.limit || 2);
+    const data = await fdFetch(`/teams/67/matches?status=FINISHED&limit=${limit}`);
+    res.json(data.matches || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 
 // =============================
