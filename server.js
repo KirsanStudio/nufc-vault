@@ -1,173 +1,111 @@
-import "dotenv/config";
 import express from "express";
+import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
+// Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ---- Config ----
-const TOKEN = process.env.FOOTBALL_DATA_TOKEN;
-const BASE = "https://api.football-data.org/v4";
+// =============================
+// CONFIG
+// =============================
+const PORT = process.env.PORT || 3000;
+const FOOTBALL_API = "https://api.football-data.org/v4";
+const API_TOKEN = process.env.FOOTBALL_DATA_TOKEN;
 
-// Cache team id
-let cachedTeamId = null;
+// =============================
+// STATIC FILES
+// =============================
+// This allows:
+// /            -> index.html
+// /live.html   -> public/live.html
+// /next.html   -> public/next.html
+// /table.html  -> public/table.html
+app.use(express.static(path.join(__dirname, "public")));
 
-// ---- Simple in-memory cache ----
-const cache = { store: new Map() };
+// =============================
+// BASIC PAGE ROUTES (OPTIONAL)
+// =============================
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
-// Cache TTL (prevents rate-limit)
-const TTL_MS = 30_000;
-
-function cacheGet(key) {
-  const hit = cache.store.get(key);
-  if (!hit) return null;
-  if (Date.now() - hit.ts > TTL_MS) return null;
-  return hit.data;
-}
-function cacheSet(key, data) {
-  cache.store.set(key, { ts: Date.now(), data });
-  return data;
-}
-
-// ---- Helper: football-data fetch ----
+// =============================
+// API HELPERS
+// =============================
 async function fdFetch(endpoint) {
-  if (!TOKEN) {
-    const err = new Error("Missing FOOTBALL_DATA_TOKEN");
-    err.status = 401;
-    throw err;
-  }
-
-  const res = await fetch(`${BASE}${endpoint}`, {
-    headers: { "X-Auth-Token": TOKEN },
+  const res = await fetch(`${FOOTBALL_API}${endpoint}`, {
+    headers: {
+      "X-Auth-Token": API_TOKEN
+    }
   });
 
-  if (res.status === 429) {
-    const body = await res.text().catch(() => "");
-    const err = new Error(`Rate limited by football-data.org (429). ${body}`);
-    err.status = 429;
-    throw err;
-  }
-
   if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    const err = new Error(`football-data error ${res.status}: ${body}`);
-    err.status = res.status;
-    throw err;
+    const text = await res.text();
+    throw new Error(`football-data error ${res.status}: ${text}`);
   }
 
   return res.json();
 }
 
-// ---- Find Newcastle team id once, then cache ----
-async function getNewcastleTeamId() {
-  if (cachedTeamId) return cachedTeamId;
+// =============================
+// API ROUTES
+// =============================
 
-  const key = "teamId:nufc";
-  const cached = cacheGet(key);
-  if (cached) {
-    cachedTeamId = cached;
-    return cachedTeamId;
-  }
-
-  const data = await fdFetch(`/competitions/PL/teams`);
-  const found = (data.teams || []).find((t) =>
-    (t.name || "").toLowerCase().includes("newcastle")
-  );
-
-  if (!found?.id) {
-    const err = new Error("Could not find Newcastle United team id");
-    err.status = 500;
-    throw err;
-  }
-
-  cachedTeamId = found.id;
-  cacheSet(key, cachedTeamId);
-  return cachedTeamId;
-}
-
-// ---- API: NUFC matches (used by Next / Live / Ticker) ----
-app.get("/api/nufc/live", async (req, res) => {
+// Get Newcastle United team ID
+app.get("/api/team", async (req, res) => {
   try {
-    const cached = cacheGet("nufc:matches");
-    if (cached) return res.json(cached);
-
-    const teamId = await getNewcastleTeamId();
-
-    const now = new Date();
-    const dateFrom = new Date(now);
-    dateFrom.setDate(now.getDate() - 7);
-
-    const dateTo = new Date(now);
-    dateTo.setDate(now.getDate() + 60);
-
-    const fromStr = dateFrom.toISOString().slice(0, 10);
-    const toStr = dateTo.toISOString().slice(0, 10);
-
-    const data = await fdFetch(
-      `/teams/${teamId}/matches?dateFrom=${fromStr}&dateTo=${toStr}`
-    );
-
-    const payload = {
-      fetchedAt: new Date().toISOString(),
-      matches: data.matches || [],
-    };
-
-    return res.json(cacheSet("nufc:matches", payload));
+    const data = await fdFetch("/teams?name=Newcastle");
+    const team = data.teams?.[0];
+    res.json(team);
   } catch (err) {
-    const status = err.status || 500;
-    return res.status(status).json({
-      error: true,
-      status,
-      message:
-        status === 429
-          ? "Rate limit hit. Please wait ~30 seconds and refresh."
-          : err.message || "Unknown server error",
-    });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// ---- API: Premier League table ----
-app.get("/api/pl/table", async (req, res) => {
+// Next Newcastle match
+app.get("/api/next-match", async (req, res) => {
   try {
-    const cached = cacheGet("pl:standings");
-    if (cached) return res.json(cached);
-
-    // standings for Premier League (PL)
-    const data = await fdFetch(`/competitions/PL/standings`);
-
-    // Most of the time the "TOTAL" table is what people expect
-    const total = (data.standings || []).find((s) => s.type === "TOTAL") || data.standings?.[0];
-
-    const payload = {
-      fetchedAt: new Date().toISOString(),
-      competition: data.competition?.name || "Premier League",
-      season: data.season || null,
-      table: total?.table || [],
-    };
-
-    return res.json(cacheSet("pl:standings", payload));
+    const data = await fdFetch("/teams/67/matches?status=SCHEDULED&limit=1");
+    res.json(data.matches?.[0] || null);
   } catch (err) {
-    const status = err.status || 500;
-    return res.status(status).json({
-      error: true,
-      status,
-      message:
-        status === 429
-          ? "Rate limit hit. Please wait ~30 seconds and refresh."
-          : err.message || "Unknown server error",
-    });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// ---- Static files ----
-app.use(express.static(path.join(__dirname, "public")));
+// Live Newcastle matches
+app.get("/api/live", async (req, res) => {
+  try {
+    const data = await fdFetch("/teams/67/matches?status=LIVE");
+    res.json(data.matches || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
+// Premier League table
+app.get("/api/table", async (req, res) => {
+  try {
+    const data = await fdFetch("/competitions/PL/standings");
+    res.json(data.standings?.[0]?.table || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// =============================
+// FALLBACK (404)
+// =============================
+app.use((req, res) => {
+  res.status(404).send("Not Found");
+});
+
+// =============================
+// START SERVER
+// =============================
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`NUFC Vault running:
-- http://localhost:${PORT}
-- http://0.0.0.0:${PORT}`);
+  console.log(`NUFC Vault running on port ${PORT}`);
 });
