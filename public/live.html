@@ -41,38 +41,28 @@
     </div>
   </header>
 
-  <main id="main" class="container page">
-    <header class="page-head">
-      <h1>Live Scores</h1>
-      <p class="lede">This page checks for Newcastle matches and updates automatically when we’re playing.</p>
-      <p class="muted small">Data powered by football-data.org.</p>
-    </header>
+<main id="main" class="container page">
 
-    <section class="card">
-      <div class="row">
-        <div>
-          <h2 class="card-title">Status</h2>
-          <p id="statusText" class="muted">Loading…</p>
-        </div>
-        <div class="right">
-          <button id="refreshBtn" class="button button-small" type="button">Refresh now</button>
-        </div>
-      </div>
+  <header class="page-head">
+    <h1>Live Scores</h1>
+    <p class="lede">Live Newcastle United matches.</p>
+  </header>
 
-      <div class="info-strip" style="margin-top: 10px;">
-        <span class="pill">Auto refresh: <strong id="pollRate">30s</strong></span>
-        <span class="pill">Live polling increases only during matches</span>
-      </div>
-    </section>
+  <!-- Status bar -->
+  <div class="row" style="margin-bottom:14px">
+    <div>
+      <strong id="statusText">Loading…</strong>
+      <span class="muted small" id="autoRefreshPill"></span>
+    </div>
+    <div class="right">
+      <button id="refreshBtn" class="button button-small">Refresh</button>
+    </div>
+  </div>
 
-    <section class="section">
-      <h2>Matches</h2>
-      <div id="matches" class="match-grid" aria-live="polite"></div>
-    </section>
+  <!-- JS injects match tiles here -->
+  <section id="matchesList" class="match-grid"></section>
 
-    <footer class="site-footer">
-      <p class="muted small">Next: fixtures + results + Season Hub.</p>
-    </footer>
-  </main>
+</main>
+
 </body>
 </html>
