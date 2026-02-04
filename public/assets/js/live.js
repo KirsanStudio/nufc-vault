@@ -1,137 +1,151 @@
-const els = {
-  statusText: document.getElementById("statusText"),
-  matches: document.getElementById("matches"),
-  refreshBtn: document.getElementById("refreshBtn"),
-  pollRate: document.getElementById("pollRate"),
-};
+// public/assets/js/live.js
+(async function () {
+  const statusEl = document.getElementById("statusText");
+  const listEl = document.getElementById("matchesList");
+  const refreshBtn = document.getElementById("refreshBtn");
+  const autoEl = document.getElementById("autoRefreshPill");
 
-let timer = null;
-let currentIntervalMs = 30000;
+  let timer = null;
+  let intervalMs = 30000; // 30s default
 
-function setStatus(text) {
-  if (els.statusText) els.statusText.textContent = text;
-}
-
-function fmtKickoff(iso) {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleString(undefined, {
-      weekday: "short",
-      day: "2-digit",
-      month: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return iso;
-  }
-}
-
-function badgeFor(status) {
-  if (status === "IN_PLAY" || status === "PAUSED" || status === "LIVE") {
-    return `<span class="badge live">● LIVE</span>`;
-  }
-  if (status === "SCHEDULED" || status === "TIMED") {
-    return `<span class="badge soon">⏱ Upcoming</span>`;
-  }
-  if (status === "FINISHED") {
-    return `<span class="badge">✓ FT</span>`;
-  }
-  return `<span class="badge">${status}</span>`;
-}
-
-function safeScore(scoreObj) {
-  const ft = scoreObj?.fullTime;
-  const rt = scoreObj?.regularTime;
-  const ht = scoreObj?.halfTime;
-
-  const home = (ft?.home ?? rt?.home ?? ht?.home);
-  const away = (ft?.away ?? rt?.away ?? ht?.away);
-
-  if (home === null || home === undefined || away === null || away === undefined) return null;
-  return { home, away };
-}
-
-function renderMatches(matches) {
-  if (!els.matches) return;
-
-  if (!matches || matches.length === 0) {
-    els.matches.innerHTML = `<div class="card"><p class="muted">No Newcastle match found in the selected window.</p></div>`;
-    return;
+  function setStatus(msg) {
+    if (statusEl) statusEl.textContent = msg;
   }
 
-  els.matches.innerHTML = matches.map(m => {
-    const home = m.homeTeam?.name ?? "Home";
-    const away = m.awayTeam?.name ?? "Away";
-    const comp = m.competition?.name ?? "";
-    const kickoff = m.utcDate ? fmtKickoff(m.utcDate) : "";
-    const status = m.status ?? "";
+  function safeTeamName(t) {
+    return t?.shortName || t?.name || "—";
+  }
 
-    const s = safeScore(m.score);
-    const scoreText = s ? `${s.home} — ${s.away}` : "—";
+  function safeCrest(t) {
+    return t?.crest || "";
+  }
 
-    return `
-      <article class="match-tile">
+  function fmtMinute(match) {
+    // football-data doesn't always include minute on free tier
+    // We'll show status only
+    return match?.status || "—";
+  }
+
+  function scoreText(match) {
+    const ft = match?.score?.fullTime || {};
+    const ht = match?.score?.halfTime || {};
+    const h = ft.home ?? ht.home ?? "—";
+    const a = ft.away ?? ht.away ?? "—";
+    return `${h}–${a}`;
+  }
+
+  function badgeClass(status) {
+    if (status === "LIVE" || status === "IN_PLAY") return "live";
+    if (status === "PAUSED") return "soon";
+    return "";
+  }
+
+  function render(matches) {
+    listEl.innerHTML = "";
+
+    if (!Array.isArray(matches) || matches.length === 0) {
+      listEl.innerHTML = `
+        <div class="match-tile">
+          <div class="row">
+            <div>
+              <div class="badge">No live match right now</div>
+              <p class="muted small" style="margin-top:10px">
+                Newcastle aren’t currently playing (or the API hasn’t marked the match as LIVE yet).
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    for (const m of matches) {
+      const home = m.homeTeam || {};
+      const away = m.awayTeam || {};
+      const status = m.status || "—";
+
+      const comp = m.competition?.name || "Match";
+      const date = m.utcDate ? new Date(m.utcDate).toLocaleString() : "—";
+
+      const tile = document.createElement("article");
+      tile.className = "match-tile";
+
+      tile.innerHTML = `
         <div class="row">
           <div>
-            ${badgeFor(status)}
-            ${comp ? `<span class="badge">${comp}</span>` : ``}
+            <div class="badge ${badgeClass(status)}">${status}</div>
+            <p class="muted small" style="margin-top:8px">${comp} • ${date}</p>
           </div>
-          <div class="muted small">${kickoff}</div>
+          <div class="right">
+            <button class="button button-small button-ghost" type="button" data-refresh>Refresh</button>
+          </div>
         </div>
 
-        <div class="scoreline">
-          ${home} <strong>${scoreText}</strong> ${away}
+        <div class="scoreline">${scoreText(m)}</div>
+
+        <div class="row" style="gap:18px; margin-top:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="${safeCrest(home)}" alt="" width="26" height="26"
+              style="border-radius:6px;background:rgba(255,255,255,.08);padding:2px" />
+            <strong>${safeTeamName(home)}</strong>
+          </div>
+
+          <div style="opacity:.75;font-weight:900;">vs</div>
+
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="${safeCrest(away)}" alt="" width="26" height="26"
+              style="border-radius:6px;background:rgba(255,255,255,.08);padding:2px" />
+            <strong>${safeTeamName(away)}</strong>
+          </div>
         </div>
 
-        <div class="muted small">Status: ${status}</div>
-      </article>
-    `;
-  }).join("");
-}
+        <p class="muted small" style="margin-top:10px">Status: ${fmtMinute(m)}</p>
+      `;
 
-function computeInterval(matches) {
-  const live = (matches || []).some(m => ["IN_PLAY", "PAUSED", "LIVE"].includes(m.status));
-  return live ? 10000 : 30000;
-}
+      // Wire tile refresh button
+      tile.querySelector("[data-refresh]")?.addEventListener("click", load);
 
-async function fetchLive() {
-  try {
-    setStatus("Checking Newcastle matches…");
-
-    const res = await fetch("/api/nufc/live", { cache: "no-store" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const data = await res.json();
-    const matches = data.matches || [];
-
-    renderMatches(matches);
-
-    const anyLive = matches.some(m => ["IN_PLAY", "PAUSED", "LIVE"].includes(m.status));
-    setStatus(anyLive
-      ? "Newcastle are playing — live updates enabled."
-      : "No live Newcastle match right now. (Will still refresh.)"
-    );
-
-    const nextMs = computeInterval(matches);
-    if (nextMs !== currentIntervalMs) {
-      currentIntervalMs = nextMs;
-      if (els.pollRate) els.pollRate.textContent = `${Math.round(currentIntervalMs / 1000)}s`;
-      restartTimer();
+      listEl.appendChild(tile);
     }
-  } catch (e) {
-    console.error(e);
-    setStatus("Couldn’t load live scores. Is the server running and API key set?");
   }
-}
 
-function restartTimer() {
-  if (timer) clearInterval(timer);
-  timer = setInterval(fetchLive, currentIntervalMs);
-}
+  async function load() {
+    setStatus("Checking for live Newcastle matches…");
 
-if (els.refreshBtn) els.refreshBtn.addEventListener("click", fetchLive);
+    try {
+      const res = await fetch("/api/live", { cache: "no-store" });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`${res.status} ${t}`);
+      }
 
-if (els.pollRate) els.pollRate.textContent = `${Math.round(currentIntervalMs / 1000)}s`;
-fetchLive();
-restartTimer();
+      const matches = await res.json();
+      render(matches);
+
+      // If match is live, poll more often
+      const hasLive = Array.isArray(matches) && matches.length > 0;
+      setStatus(hasLive ? "Live match detected." : "No live match right now.");
+
+      setAutoRefresh(hasLive ? 10000 : 30000);
+    } catch (err) {
+      console.error(err);
+      setStatus("Couldn't load live scores. If you hit a rate limit, wait ~30 seconds then refresh.");
+      render([]);
+      setAutoRefresh(30000);
+    }
+  }
+
+  function setAutoRefresh(ms) {
+    intervalMs = ms;
+    if (autoEl) autoEl.textContent = `Auto refresh: ${Math.round(intervalMs / 1000)}s`;
+
+    if (timer) clearInterval(timer);
+    timer = setInterval(load, intervalMs);
+  }
+
+  if (refreshBtn) refreshBtn.addEventListener("click", load);
+
+  // start
+  load();
+  setAutoRefresh(30000);
+})();
