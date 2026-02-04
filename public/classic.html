@@ -1,210 +1,81 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NUFC Vault • Classic Matches</title>
-  <meta name="description" content="Classic Newcastle United matches, embedded video." />
-  <link rel="stylesheet" href="assets/css/styles.css" />
-  <script defer src="assets/js/main.js"></script>
-  <script defer src="assets/js/ticker.js"></script>
+<section class="match-list">
 
-  <style>
-    .controls { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin: 18px 0 8px; }
-    .select {
-      appearance:none;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.20);
-      color: rgba(245,247,251,.92);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-weight: 700;
-    }
-    .count { color: rgba(245,247,251,.65); font-size:.9rem; }
-    .match-card{ margin-bottom: 18px; }
-  </style>
-
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const select = document.getElementById("filter");
-      const cards = Array.from(document.querySelectorAll("[data-era]"));
-      const count = document.getElementById("count");
-
-      function apply() {
-        const v = select.value;
-        let visible = 0;
-        cards.forEach(c => {
-          const ok = (v === "all") || (c.dataset.era === v);
-          c.style.display = ok ? "" : "none";
-          if (ok) visible++;
-        });
-        count.textContent = `${visible} match${visible===1?"":"es"} shown`;
-      }
-
-      select.addEventListener("change", apply);
-      apply();
-    });
-  </script>
-</head>
-
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Homepage">
-        <span class="brand-badge">NUFC</span>
-        <span class="brand-text">Vault • Matchday Edition</span>
-      </a>
-
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-        <span class="sr-only">Toggle menu</span>
-        <span class="hamburger" aria-hidden="true"></span>
-      </button>
-
-      <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <a class="nav-link" href="index.html">Home</a>
-        <a class="nav-link" href="next.html">Next Match</a>
-        <a class="nav-link" href="table.html">PL Table</a>
-        <a class="nav-link is-active" href="classic.html">Classic Matches</a>
-        <a class="nav-link" href="live.html">Live Scores</a>
-      </nav>
-
-      <div class="matchday-ticker" id="matchdayTicker" aria-live="polite">
-        <span class="ticker-dot" aria-hidden="true"></span>
-        <span class="ticker-text" id="tickerText">Loading next match…</span>
-        <span class="ticker-time" id="tickerTime">—</span>
-      </div>
+  <!-- 2010s -->
+  <article class="match-card" data-era="2010s">
+    <div class="match-meta">
+      <h2>Newcastle 4–4 Arsenal</h2>
+      <p class="muted">Premier League — 5 February 2011</p>
     </div>
-  </header>
+    <div class="video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/7RhqDYJHykA"
+        title="Newcastle 4-4 Arsenal"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </article>
 
-  <main id="main" class="container page">
-    <header class="page-head">
-      <h1>Classic Matches</h1>
-      <p class="lede">The vault: iconic games you’ll watch a hundred times and still get goosebumps.</p>
+  <article class="match-card" data-era="2010s">
+    <div class="match-meta">
+      <h2>Newcastle 5–1 Tottenham</h2>
+      <p class="muted">Premier League — 15 May 2016</p>
+    </div>
+    <div class="video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/Mss8_zGt52o"
+        title="Newcastle 5-1 Tottenham (2016) highlights"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </article>
 
-      <div class="controls">
-        <label class="sr-only" for="filter">Filter era</label>
-        <select id="filter" class="select">
-          <option value="all">All eras</option>
-          <option value="2010s">2010s</option>
-          <option value="2000s">2000s</option>
-          <option value="1990s">1990s</option>
-          <option value="cup">Cups / Europe</option>
-        </select>
-        <span class="count" id="count">—</span>
-      </div>
+  <!-- 2000s / 90s -->
+  <article class="match-card" data-era="2000s">
+    <div class="match-meta">
+      <h2>Newcastle 4–3 Leicester</h2>
+      <p class="muted">Premier League Classic</p>
+    </div>
+    <div class="video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/rFUWKdimPaU"
+        title="Newcastle 4-3 Leicester highlights"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </article>
 
-      <p class="muted small">Tip: You can swap any video by pasting a different YouTube embed link.</p>
-    </header>
+  <article class="match-card" data-era="1990s">
+    <div class="match-meta">
+      <h2>Newcastle 5–0 Man United</h2>
+      <p class="muted">Premier League — 20 October 1996</p>
+    </div>
+    <div class="video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/9NoxxI44NYE"
+        title="Newcastle 5-0 Man United highlights"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </article>
 
-    <section class="match-list">
+  <!-- Cup / Europe or Bonus -->
+  <article class="match-card" data-era="cup">
+    <div class="match-meta">
+      <h2>Newcastle Cup Classic</h2>
+      <p class="muted">Optional match — add your favourite</p>
+    </div>
+    <div class="video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/VIDEO_ID_HERE"
+        title="Cup or European classic highlights"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </article>
 
-      <article class="match-card" data-era="2010s">
-        <div class="match-meta">
-          <h2>Newcastle 4–4 Arsenal</h2>
-          <p class="muted">Premier League — 5 February 2011</p>
-          <div class="tags">
-            <span class="tag">The Comeback</span>
-            <span class="tag">St James’ Park</span>
-            <span class="tag">Classic</span>
-          </div>
-        </div>
-        <div class="video">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/7RhqDYJHykA"
-            title="Newcastle 4-4 Arsenal"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-      </article>
-
-      <article class="match-card" data-era="2010s">
-        <div class="match-meta">
-          <h2>Newcastle 5–1 Tottenham</h2>
-          <p class="muted">Premier League — 15 May 2016</p>
-          <div class="tags">
-            <span class="tag">Party Atmosphere</span>
-            <span class="tag">Last Day</span>
-            <span class="tag">Goals</span>
-          </div>
-        </div>
-        <div class="video">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/D0Sh6WGu07U"
-            title="Newcastle 5-1 Tottenham (2016) highlights"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-      </article>
-
-      <article class="match-card" data-era="2000s">
-        <div class="match-meta">
-          <h2>Newcastle 4–3 Leicester</h2>
-          <p class="muted">Premier League — 3 April 2004</p>
-          <div class="tags">
-            <span class="tag">Shearer</span>
-            <span class="tag">Late Drama</span>
-            <span class="tag">Seven Goals</span>
-          </div>
-        </div>
-        <div class="video">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/BYfl_6t84Vg"
-            title="Newcastle 4-3 Leicester (2004) highlights"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-      </article>
-
-      <article class="match-card" data-era="1990s">
-        <div class="match-meta">
-          <h2>Newcastle 5–0 Man United</h2>
-          <p class="muted">Premier League — 20 October 1996</p>
-          <div class="tags">
-            <span class="tag">Keegan Era</span>
-            <span class="tag">Razor</span>
-            <span class="tag">Statement Win</span>
-          </div>
-        </div>
-        <div class="video">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/9NoxxI44NYE"
-            title="Newcastle 5-0 Man United (1996) highlights"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-      </article>
-
-      <article class="match-card" data-era="cup">
-        <div class="match-meta">
-          <h2>Newcastle 3–2 Chelsea</h2>
-          <p class="muted">League Cup — (add date)</p>
-          <div class="tags">
-            <span class="tag">Turnaround</span>
-            <span class="tag">Goals</span>
-            <span class="tag">Away End</span>
-          </div>
-        </div>
-        <div class="video">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/ubE1J3FqPgg"
-            title="Newcastle 3-2 Chelsea (classic) highlights"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-      </article>
-
-    </section>
-
-    <footer class="site-footer">
-      <p class="muted">Want more? Check back soon.</p>
-    </footer>
-  </main>
-</body>
-</html>
+</section>
