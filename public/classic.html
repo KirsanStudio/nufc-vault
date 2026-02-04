@@ -10,7 +10,6 @@
   <script defer src="assets/js/ticker.js"></script>
 
   <style>
-    /* small page-only extras (safe) */
     .controls { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin: 18px 0 8px; }
     .select {
       appearance:none;
@@ -26,7 +25,6 @@
   </style>
 
   <script>
-    // Simple filter (runs in browser)
     window.addEventListener("DOMContentLoaded", () => {
       const select = document.getElementById("filter");
       const cards = Array.from(document.querySelectorAll("[data-era]"));
@@ -48,6 +46,7 @@
     });
   </script>
 </head>
+
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -101,7 +100,6 @@
 
     <section class="match-list">
 
-      <!-- 2010s -->
       <article class="match-card" data-era="2010s">
         <div class="match-meta">
           <h2>Newcastle 4–4 Arsenal</h2>
@@ -112,13 +110,13 @@
             <span class="tag">Classic</span>
           </div>
         </div>
-
         <div class="video">
           <iframe
             src="https://www.youtube-nocookie.com/embed/7RhqDYJHykA"
             title="Newcastle 4-4 Arsenal"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+            allowfullscreen>
+          </iframe>
         </div>
       </article>
 
@@ -131,20 +129,17 @@
             <span class="tag">Last Day</span>
             <span class="tag">Goals</span>
           </div>
-          <p class="muted small">Replace the video if this embed isn’t the one you want.</p>
         </div>
-
         <div class="video">
-          <!-- PLACEHOLDER: replace with your chosen YouTube embed -->
           <iframe
-            src="https://www.youtube-nocookie.com/embed/DQSh6WGuQ7U?si=TFyvVrokUXIx_8h9"
+            src="https://www.youtube-nocookie.com/embed/D0Sh6WGu07U"
             title="Newcastle 5-1 Tottenham (2016) highlights"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+            allowfullscreen>
+          </iframe>
         </div>
       </article>
 
-      <!-- 2000s -->
       <article class="match-card" data-era="2000s">
         <div class="match-meta">
           <h2>Newcastle 4–3 Leicester</h2>
@@ -154,20 +149,17 @@
             <span class="tag">Late Drama</span>
             <span class="tag">Seven Goals</span>
           </div>
-          <p class="muted small">Replace the video with any highlights upload you prefer.</p>
         </div>
-
         <div class="video">
-          <!-- PLACEHOLDER -->
           <iframe
-            src="https://www.youtube-nocookie.com/embed/BYfl_6t84Vg?si=8KD6XVIKl1Qo93fO"
+            src="https://www.youtube-nocookie.com/embed/BYfl_6t84Vg"
             title="Newcastle 4-3 Leicester (2004) highlights"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+            allowfullscreen>
+          </iframe>
         </div>
       </article>
 
-      <!-- 1990s -->
       <article class="match-card" data-era="1990s">
         <div class="match-meta">
           <h2>Newcastle 5–0 Man United</h2>
@@ -178,44 +170,40 @@
             <span class="tag">Statement Win</span>
           </div>
         </div>
-
         <div class="video">
-          <!-- PLACEHOLDER -->
           <iframe
-            src="https://www.youtube-nocookie.com/embed/9NoxxI44NYE?si=A7GOhUUv_hhW1NTV"
+            src="https://www.youtube-nocookie.com/embed/9NoxxI44NYE"
             title="Newcastle 5-0 Man United (1996) highlights"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+            allowfullscreen>
+          </iframe>
         </div>
       </article>
 
-      <!-- Cups / Europe -->
       <article class="match-card" data-era="cup">
         <div class="match-meta">
           <h2>Newcastle 3–2 Chelsea</h2>
           <p class="muted">League Cup — (add date)</p>
           <div class="tags">
-            <span class="tag">Premier League</span>
-            <span class="tag">Turn Around</span>
-            <span class="tag">Proper Away End</span>
+            <span class="tag">Turnaround</span>
+            <span class="tag">Goals</span>
+            <span class="tag">Away End</span>
           </div>
-          <p class="muted small">Optional: change the title/date to your exact classic.</p>
         </div>
-
         <div class="video">
-          <!-- PLACEHOLDER -->
           <iframe
-            src="https://www.youtube-nocookie.com/embed/ubE1J3FqPgg?si=-kZp4K6edgzS0w_L"
-            title="Newcastle vs Chelsea cup classic"
+            src="https://www.youtube-nocookie.com/embed/ubE1J3FqPgg"
+            title="Newcastle 3-2 Chelsea (classic) highlights"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+            allowfullscreen>
+          </iframe>
         </div>
       </article>
 
     </section>
 
     <footer class="site-footer">
-      <p class="muted">Want more? Check Back Soon!.</p>
+      <p class="muted">Want more? Check back soon.</p>
     </footer>
   </main>
 </body>
