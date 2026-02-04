@@ -8,6 +8,45 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
   <script defer src="assets/js/main.js"></script>
   <script defer src="assets/js/ticker.js"></script>
+
+  <style>
+    /* small page-only extras (safe) */
+    .controls { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin: 18px 0 8px; }
+    .select {
+      appearance:none;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: rgba(245,247,251,.92);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 700;
+    }
+    .count { color: rgba(245,247,251,.65); font-size:.9rem; }
+    .match-card{ margin-bottom: 18px; }
+  </style>
+
+  <script>
+    // Simple filter (runs in browser)
+    window.addEventListener("DOMContentLoaded", () => {
+      const select = document.getElementById("filter");
+      const cards = Array.from(document.querySelectorAll("[data-era]"));
+      const count = document.getElementById("count");
+
+      function apply() {
+        const v = select.value;
+        let visible = 0;
+        cards.forEach(c => {
+          const ok = (v === "all") || (c.dataset.era === v);
+          c.style.display = ok ? "" : "none";
+          if (ok) visible++;
+        });
+        count.textContent = `${visible} match${visible===1?"":"es"} shown`;
+      }
+
+      select.addEventListener("change", apply);
+      apply();
+    });
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -44,10 +83,26 @@
     <header class="page-head">
       <h1>Classic Matches</h1>
       <p class="lede">The vault: iconic games you’ll watch a hundred times and still get goosebumps.</p>
+
+      <div class="controls">
+        <label class="sr-only" for="filter">Filter era</label>
+        <select id="filter" class="select">
+          <option value="all">All eras</option>
+          <option value="2010s">2010s</option>
+          <option value="2000s">2000s</option>
+          <option value="1990s">1990s</option>
+          <option value="cup">Cups / Europe</option>
+        </select>
+        <span class="count" id="count">—</span>
+      </div>
+
+      <p class="muted small">Tip: You can swap any video by pasting a different YouTube embed link.</p>
     </header>
 
     <section class="match-list">
-      <article class="match-card" id="nufc-arsenal-2011">
+
+      <!-- 2010s -->
+      <article class="match-card" data-era="2010s">
         <div class="match-meta">
           <h2>Newcastle 4–4 Arsenal</h2>
           <p class="muted">Premier League — 5 February 2011</p>
@@ -66,10 +121,101 @@
             allowfullscreen></iframe>
         </div>
       </article>
+
+      <article class="match-card" data-era="2010s">
+        <div class="match-meta">
+          <h2>Newcastle 5–1 Tottenham</h2>
+          <p class="muted">Premier League — 15 May 2016</p>
+          <div class="tags">
+            <span class="tag">Party Atmosphere</span>
+            <span class="tag">Last Day</span>
+            <span class="tag">Goals</span>
+          </div>
+          <p class="muted small">Replace the video if this embed isn’t the one you want.</p>
+        </div>
+
+        <div class="video">
+          <!-- PLACEHOLDER: replace with your chosen YouTube embed -->
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/DQSh6WGuQ7U?si=TFyvVrokUXIx_8h9"
+            title="Newcastle 5-1 Tottenham (2016) highlights"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+      </article>
+
+      <!-- 2000s -->
+      <article class="match-card" data-era="2000s">
+        <div class="match-meta">
+          <h2>Newcastle 4–3 Leicester</h2>
+          <p class="muted">Premier League — 3 April 2004</p>
+          <div class="tags">
+            <span class="tag">Shearer</span>
+            <span class="tag">Late Drama</span>
+            <span class="tag">Seven Goals</span>
+          </div>
+          <p class="muted small">Replace the video with any highlights upload you prefer.</p>
+        </div>
+
+        <div class="video">
+          <!-- PLACEHOLDER -->
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/BYfl_6t84Vg?si=8KD6XVIKl1Qo93fO"
+            title="Newcastle 4-3 Leicester (2004) highlights"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+      </article>
+
+      <!-- 1990s -->
+      <article class="match-card" data-era="1990s">
+        <div class="match-meta">
+          <h2>Newcastle 5–0 Man United</h2>
+          <p class="muted">Premier League — 20 October 1996</p>
+          <div class="tags">
+            <span class="tag">Keegan Era</span>
+            <span class="tag">Razor</span>
+            <span class="tag">Statement Win</span>
+          </div>
+        </div>
+
+        <div class="video">
+          <!-- PLACEHOLDER -->
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/9NoxxI44NYE?si=A7GOhUUv_hhW1NTV"
+            title="Newcastle 5-0 Man United (1996) highlights"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+      </article>
+
+      <!-- Cups / Europe -->
+      <article class="match-card" data-era="cup">
+        <div class="match-meta">
+          <h2>Newcastle 3–2 Chelsea</h2>
+          <p class="muted">League Cup — (add date)</p>
+          <div class="tags">
+            <span class="tag">Premier League</span>
+            <span class="tag">Turn Around</span>
+            <span class="tag">Proper Away End</span>
+          </div>
+          <p class="muted small">Optional: change the title/date to your exact classic.</p>
+        </div>
+
+        <div class="video">
+          <!-- PLACEHOLDER -->
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/ubE1J3FqPgg?si=-kZp4K6edgzS0w_L"
+            title="Newcastle vs Chelsea cup classic"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+      </article>
+
     </section>
 
     <footer class="site-footer">
-      <p class="muted">Add more classics by duplicating the match card and changing the YouTube embed.</p>
+      <p class="muted">Want more? Check Back Soon!.</p>
     </footer>
   </main>
 </body>
