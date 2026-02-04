@@ -106,5 +106,41 @@
   }
 
   if (refreshBtn) refreshBtn.addEventListener("click", load);
-  load();
+  async function load() {
+  setStatus("Loading fixtures…");
+
+  try {
+    const [upRes, reRes, manRes] = await Promise.all([
+      fetch("/api/upcoming?limit=10", { cache: "no-store" }),     // grab a few more
+      fetch("/api/recent?limit=2", { cache: "no-store" }),
+      fetch("/api/manual-fixtures", { cache: "no-store" })
+    ]);
+
+    if (!upRes.ok) throw new Error(`Upcoming: ${upRes.status} ${await upRes.text()}`);
+    if (!reRes.ok) throw new Error(`Recent: ${reRes.status} ${await reRes.text()}`);
+    if (!manRes.ok) throw new Error(`Manual: ${manRes.status} ${await manRes.text()}`);
+
+    let upcoming = await upRes.json();
+    const recent = await reRes.json();
+    const manual = await manRes.json();
+
+    // Merge manual into upcoming, then sort by date and take next 5
+    const merged = [...(Array.isArray(upcoming) ? upcoming : []), ...(Array.isArray(manual) ? manual : [])]
+      .filter(m => m && m.utcDate)
+      .sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
+
+    const nextFive = merged.slice(0, 5);
+
+    renderList(upcomingEl, nextFive, "upcoming", "No upcoming matches found");
+    renderList(recentEl, recent, "recent", "No recent results found");
+
+    setStatus("Updated.");
+  } catch (err) {
+    console.error(err);
+    setStatus("Couldn’t load fixtures/results. If you hit a 429 limit, wait ~30s then refresh.");
+    renderList(upcomingEl, [], "upcoming", "Unavailable");
+    renderList(recentEl, [], "recent", "Unavailable");
+  }
+}
+
 })();

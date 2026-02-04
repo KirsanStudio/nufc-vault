@@ -1,0 +1,12 @@
+{
+  "matches": [
+    {
+      "utcDate": "2026-02-04T20:00:00Z",
+      "status": "SCHEDULED",
+      "competition": { "name": "EFL Cup (Carabao Cup)" },
+      "awayTeam": { "id": 67, "name": "Newcastle United FC", "shortName": "Newcastle" },
+      "homeTeam": { "id": 65, "name": "Manchester City FC", "shortName": "Man City" },
+      "note": "Manual fixture (cup coverage not in API plan)"
+    }
+  ]
+}

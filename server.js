@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 const app = express();
 
@@ -49,6 +50,22 @@ async function fdFetch(endpoint) {
 
   return res.json();
 }
+function readManualFixtures() {
+  try {
+    const p = path.join(__dirname, "public", "data", "manual-fixtures.json");
+    const raw = fs.readFileSync(p, "utf8");
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed.matches) ? parsed.matches : [];
+  } catch {
+    return [];
+  }
+}
+
+function isUpcoming(m) {
+  const t = new Date(m.utcDate).getTime();
+  return Number.isFinite(t) && t > Date.now() && (m.status === "SCHEDULED" || m.status === "TIMED");
+}
+
 
 // =============================
 // API ROUTES
@@ -64,6 +81,9 @@ app.get("/api/team", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+app.get("/api/manual-fixtures", (req, res) => {
+  res.json(readManualFixtures());
+});
 
 // Next Newcastle match
 app.get("/api/next-match", async (req, res) => {
@@ -76,10 +96,31 @@ app.get("/api/next-match", async (req, res) => {
 });
 
 // Live Newcastle matches
-app.get("/api/live", async (req, res) => {
+app.get("/api/next-match", async (req, res) => {
   try {
-    const data = await fdFetch("/teams/67/matches?status=LIVE");
-    res.json(data.matches || []);
+    // 1) API next scheduled match
+    let apiMatch = null;
+    try {
+      const api = await fdFetch("/teams/67/matches?status=SCHEDULED&limit=1");
+      apiMatch = api.matches?.[0] || null;
+    } catch {
+      apiMatch = null;
+    }
+
+    // 2) Manual upcoming match (earliest)
+    const manualMatches = readManualFixtures().filter(isUpcoming);
+    manualMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
+    const manualNext = manualMatches[0] || null;
+
+    // 3) Pick whichever is sooner
+    if (!apiMatch && !manualNext) return res.json(null);
+    if (!apiMatch) return res.json(manualNext);
+    if (!manualNext) return res.json(apiMatch);
+
+    const apiTime = new Date(apiMatch.utcDate).getTime();
+    const manTime = new Date(manualNext.utcDate).getTime();
+
+    return res.json(manTime < apiTime ? manualNext : apiMatch);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
