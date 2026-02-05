@@ -590,3 +590,67 @@ html.matchday #matchdayTicker {
     border-radius: 999px;
   }
 }
+/* ===== Mobile nav fix ===== */
+.nav-dropdown { position: relative; }
+
+.nav-menu{
+  display:none;
+  position:absolute;
+  right:0;
+  top:44px;
+  min-width: 200px;
+  padding:10px;
+  border-radius: 16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(7,9,12,.96);
+  box-shadow: 0 16px 60px rgba(0,0,0,.55);
+  z-index: 60;
+}
+
+.nav-menu a{
+  display:block;
+  padding:10px 12px;
+  border-radius: 12px;
+  color: rgba(245,247,251,.86);
+}
+.nav-menu a:hover{
+  background: rgba(255,255,255,.06);
+  color: rgba(245,247,251,.98);
+}
+
+/* show dropdown when button is expanded */
+.nav-dropbtn[aria-expanded="true"] + .nav-menu{
+  display:block;
+}
+
+/* Mobile rules */
+@media (max-width: 860px){
+  /* nav hidden by default on mobile */
+  .site-nav{
+    display:none;
+    position:absolute;
+    right:18px;
+    top:68px;
+    flex-direction:column;
+    min-width:230px;
+    background: rgba(7,9,12,.96);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius: 22px;
+    padding:10px;
+    box-shadow: 0 16px 60px rgba(0,0,0,.55);
+    z-index: 55;
+  }
+
+  .site-nav.is-open{ display:flex; }
+
+  /* dropdown becomes inline-friendly on mobile */
+  .nav-dropdown{ width:100%; }
+  .nav-dropbtn{ width:100%; text-align:left; }
+
+  .nav-menu{
+    position: static;
+    width:100%;
+    min-width: unset;
+    margin-top: 8px;
+  }
+}
