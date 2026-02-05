@@ -544,3 +544,49 @@ html.matchday #matchdayTicker {
 .matchday-ticker{
   margin-left: 10px;
 }
+
+/* ===== Mobile fix for new navbar ===== */
+@media (max-width: 860px){
+
+  /* When the hamburger menu opens, make it a proper panel again */
+  .site-nav{
+    background: rgba(7,9,12,.96) !important;
+    border: 1px solid rgba(255,255,255,.12) !important;
+    border-radius: var(--r-lg) !important;
+    padding: 10px !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+  }
+
+  .nav-link{
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+  }
+
+  /* On mobile: remove the "More ▾" button and just show its links */
+  .nav-dropdown{
+    width: 100%;
+  }
+
+  .nav-dropbtn{
+    display: none !important;
+  }
+
+  .nav-menu{
+    position: static !important;
+    display: block !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .nav-menu a{
+    width: 100%;
+    display: block;
+    padding: 12px 14px;
+    border-radius: 999px;
+  }
+}
