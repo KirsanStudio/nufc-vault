@@ -31,26 +31,31 @@
   </style>
 
   <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const select = document.getElementById("filter");
-      const cards = Array.from(document.querySelectorAll("[data-era]"));
-      const count = document.getElementById("count");
+  window.addEventListener("DOMContentLoaded", () => {
+    const select = document.getElementById("filter");
+    const cards = Array.from(document.querySelectorAll(".match-card"));
+    const count = document.getElementById("count");
 
-      function apply() {
-        const v = select.value;
-        let visible = 0;
-        cards.forEach(c => {
-          const ok = (v === "all") || (c.dataset.era === v);
-          c.style.display = ok ? "" : "none";
-          if (ok) visible++;
-        });
-        count.textContent = `${visible} match${visible===1?"":"es"} shown`;
-      }
+    function apply() {
+      const v = select.value;
+      let visible = 0;
 
-      select.addEventListener("change", apply);
-      apply();
-    });
-  </script>
+      cards.forEach(card => {
+        const tags = (card.dataset.tags || "").split(" ");
+        const show = (v === "all") || tags.includes(v);
+
+        card.style.display = show ? "" : "none";
+        if (show) visible++;
+      });
+
+      count.textContent = `${visible} match${visible === 1 ? "" : "es"} shown`;
+    }
+
+    select.addEventListener("change", apply);
+    apply();
+  });
+</script>
+
 </head>
 
 <body>
@@ -103,7 +108,7 @@
       <p class="lede">The vault: iconic games you’ll watch a hundred times and still get goosebumps.</p>
 
       <div class="controls">
-        <label class="sr-only" for="filter">Filter era</label>
+        <label class="sr-only" for="filter">Filter tags</label>
         <select id="filter" class="select">
           <option value="all">All eras</option>
 		  <option value="2020s">2020s</option>
@@ -118,7 +123,7 @@
     </header>
 
     <section class="match-list">
-      <article class="match-card" data-era="2020s""cup">
+      <article class="match-card" data-tags="2020s cup">
         <div class="match-meta">
           <h2>Newcastle 2–1 Liverpool</h2>
           <p class="muted">EFL Cup final — 16 March 2025</p>
@@ -138,7 +143,7 @@
         </div>
       </article>
 
-      <article class="match-card" data-era="2010s">
+      <article class="match-card" data-tags="2010s">
         <div class="match-meta">
           <h2>Newcastle 4–4 Arsenal</h2>
           <p class="muted">Premier League — 5 February 2011</p>
@@ -158,7 +163,7 @@
         </div>
       </article>
 
-      <article class="match-card" data-era="2000s">
+      <article class="match-card" data-tags="2000s">
         <div class="match-meta">
           <h2>Newcastle 4–3 Leicester</h2>
           <p class="muted">Premier League — 3 April 2004</p>
@@ -178,7 +183,7 @@
         </div>
       </article>
 
-      <article class="match-card" data-era="1990s">
+      <article class="match-card" data-tags="1990s">
         <div class="match-meta">
           <h2>Newcastle 5–0 Man United</h2>
           <p class="muted">Premier League — 20 October 1996</p>
@@ -198,10 +203,10 @@
         </div>
       </article>
 
-      <article class="match-card" data-era="cup">
+      <article class="match-card" data-tags="2010s cup">
         <div class="match-meta">
           <h2>Newcastle 3–2 Chelsea</h2>
-          <p class="muted">League Cup — (add date)</p>
+          <p class="muted">League Cup — 22 September 2010</p>
           <div class="tags">
             <span class="tag">Turnaround</span>
             <span class="tag">Goals</span>
