@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAWFPL • Fantasy Hub</title>
+  <meta name="description" content="RAWFPL Fantasy Premier League matchweek videos." />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/rawfpl.css" />
+
+  <script defer src="assets/js/main.js"></script>
+  <script defer src="assets/js/ticker.js"></script>
+</head>
+
+<body class="rawfpl-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Use the SAME header/nav block you use on other pages -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Homepage">
+        <span class="brand-badge">NUFC</span>
+        <span class="brand-text">Vault • Matchday Edition</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Toggle menu</span>
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="next.html">Next Match</a>
+        <a class="nav-link" href="fixtures.html">Fixtures</a>
+        <a class="nav-link" href="table.html">PL Table</a>
+        <a class="nav-link" href="classic.html">Classic Matches</a>
+        <a class="nav-link" href="live.html">Live Scores</a>
+        <a class="nav-link is-active" href="rawfpl.html">RAWFPL</a>
+        <a class="nav-link" href="history.html">History</a>
+      </nav>
+
+      <div class="matchday-ticker" id="matchdayTicker" aria-live="polite">
+        <span class="ticker-dot" aria-hidden="true"></span>
+        <span class="ticker-text" id="tickerText">Loading next match…</span>
+        <span class="ticker-time" id="tickerTime">—</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container page">
+    <section class="raw-hero">
+      <div class="raw-hero-inner">
+        <div>
+          <p class="raw-kicker">Fantasy Premier League • Matchweek Updates</p>
+
+          <div class="raw-logo">
+            <img src="assets/img/rawfpl-logo.png" alt="RAWFPL logo" />
+            <div>
+              <h1 class="raw-title">RAWFPL Video Hub</h1>
+              <p class="raw-sub">
+                Weekly FPL breakdowns, transfer thoughts, captain picks and matchweek reactions —
+                all in one place.
+              </p>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="button" href="https://www.youtube.com/@RAWFPL" target="_blank" rel="noopener">Visit YouTube</a>
+            <a class="button button-ghost" href="#videos">Watch uploads</a>
+          </div>
+
+          <div class="info-strip">
+            <div class="pill">🟣 #26004B</div>
+            <div class="pill">🟢 #43D361</div>
+            <div class="pill">⚽ FPL Every Week</div>
+          </div>
+        </div>
+
+        <aside class="card">
+          <h2 class="card-title">About RAWFPL</h2>
+          <p class="muted">
+            A dedicated Fantasy Premier League channel. New uploads appear automatically below.
+          </p>
+          <p class="muted small" style="margin-top:10px;">
+            Tip: If YouTube embeds ever fail on mobile, refresh once.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="videos" class="section card">
+      <h2 class="card-title">Latest & Previous Uploads</h2>
+      <p class="muted small">Auto-updating playlist from the RAWFPL channel.</p>
+
+      <div class="video" style="margin-top:12px;">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/videoseries?listType=user_uploads&user=RAWFPL"
+          title="RAWFPL uploads"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p class="muted small">RAWFPL content © their channel • Page styling inspired by RAWFPL branding.</p>
+    </footer>
+  </main>
+</body>
+</html>

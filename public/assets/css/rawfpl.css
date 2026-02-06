@@ -1,0 +1,121 @@
+/* RAWFPL page-only theme */
+:root{
+  --raw-bg: #26004B;     /* main */
+  --raw-accent: #43d361; /* secondary */
+  --raw-text: #ffffff;
+  --raw-muted: rgba(255,255,255,.78);
+  --raw-line: rgba(255,255,255,.14);
+}
+
+/* Only affects pages that use .rawfpl-page on <body> */
+body.rawfpl-page{
+  color: var(--raw-text);
+  background:
+    radial-gradient(900px 600px at 15% -10%, rgba(67,211,97,.22) 0%, rgba(67,211,97,0) 55%),
+    radial-gradient(900px 600px at 85% 0%, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 55%),
+    linear-gradient(180deg, #1a0034 0%, var(--raw-bg) 65%, #14002a 100%);
+}
+
+/* Make header fit the RAWFPL vibe (but only on this page) */
+body.rawfpl-page .site-header{
+  background: rgba(38,0,75,.70);
+  border-bottom: 1px solid var(--raw-line);
+}
+body.rawfpl-page .brand-badge{
+  background: var(--raw-accent);
+  color: #0b0f15;
+  border-color: rgba(0,0,0,.15);
+}
+body.rawfpl-page .nav-link.is-active{
+  background: var(--raw-accent);
+  color: #0b0f15;
+}
+
+/* RAWFPL hero */
+.raw-hero{
+  margin-top: 14px;
+  border-radius: 22px;
+  border: 1px solid var(--raw-line);
+  background: rgba(0,0,0,.18);
+  box-shadow: 0 16px 60px rgba(0,0,0,.55);
+  overflow: hidden;
+  position: relative;
+}
+.raw-hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(700px 380px at 20% 15%, rgba(67,211,97,.25) 0%, rgba(67,211,97,0) 55%),
+    radial-gradient(700px 380px at 85% 0%, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 55%);
+  pointer-events:none;
+}
+.raw-hero-inner{
+  position:relative;
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 18px;
+  padding: 24px;
+}
+.raw-logo{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+.raw-logo img{
+  width:64px;
+  height:64px;
+  border-radius: 18px;
+  border: 1px solid var(--raw-line);
+  background: rgba(0,0,0,.25);
+}
+.raw-kicker{
+  color: var(--raw-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: .78rem;
+  margin: 0 0 10px;
+}
+.raw-title{
+  margin: 6px 0 10px;
+  font-size: clamp(2rem, 2.4vw + 1.2rem, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -.5px;
+}
+.raw-sub{
+  color: var(--raw-muted);
+  max-width: 70ch;
+}
+
+/* Buttons (RAWFPL) */
+body.rawfpl-page .button{
+  background: var(--raw-accent);
+  color: #0b0f15;
+  border-color: rgba(0,0,0,.12);
+}
+body.rawfpl-page .button:hover{ transform: translateY(-1px); }
+body.rawfpl-page .button-ghost{
+  background: rgba(255,255,255,.10);
+  color: var(--raw-text);
+  border-color: var(--raw-line);
+}
+
+/* Card tweaks */
+body.rawfpl-page .card,
+body.rawfpl-page .feature,
+body.rawfpl-page .match-card{
+  background: rgba(0,0,0,.18);
+  border-color: var(--raw-line);
+}
+body.rawfpl-page .muted{ color: var(--raw-muted); }
+
+/* Video frame glow */
+body.rawfpl-page .video{
+  border-color: rgba(67,211,97,.25);
+  box-shadow: 0 18px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(67,211,97,.10);
+}
+
+/* Mobile */
+@media (max-width: 860px){
+  .raw-hero-inner{ grid-template-columns: 1fr; }
+}
