@@ -80,3 +80,35 @@ document.addEventListener("DOMContentLoaded", () => {
   setupNav();
   setupYear();
 });
+// ==============================
+// Dropdown menu toggle (More ▾)
+// ==============================
+document.addEventListener("DOMContentLoaded", () => {
+  const dropBtn = document.querySelector(".nav-dropbtn");
+  const menu = document.querySelector(".nav-menu");
+
+  if (!dropBtn || !menu) return;
+
+  // Toggle on button click
+  dropBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const open = dropBtn.getAttribute("aria-expanded") === "true";
+    dropBtn.setAttribute("aria-expanded", String(!open));
+  });
+
+  // Prevent clicks inside menu from closing before link works
+  menu.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  // Close when clicking anywhere else
+  document.addEventListener("click", () => {
+    dropBtn.setAttribute("aria-expanded", "false");
+  });
+
+  // Close on Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") dropBtn.setAttribute("aria-expanded", "false");
+  });
+});
