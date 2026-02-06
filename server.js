@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
 
 const app = express();
 
@@ -16,19 +15,30 @@ const PORT = process.env.PORT || 3000;
 const FOOTBALL_API = "https://api.football-data.org/v4";
 const API_TOKEN = process.env.FOOTBALL_DATA_TOKEN;
 
+// Newcastle team id on football-data
+const NUFC_TEAM_ID = 67;
+
+// Simple in-memory cache to reduce API calls (rate limit friendly)
+const cache = new Map();
+function cacheGet(key) {
+  const hit = cache.get(key);
+  if (!hit) return null;
+  if (Date.now() > hit.expires) {
+    cache.delete(key);
+    return null;
+  }
+  return hit.value;
+}
+function cacheSet(key, value, ttlMs = 60 * 1000) {
+  cache.set(key, { value, expires: Date.now() + ttlMs });
+}
+
 // =============================
 // STATIC FILES
 // =============================
-// This allows:
-// /            -> index.html
-// /live.html   -> public/live.html
-// /next.html   -> public/next.html
-// /table.html  -> public/table.html
 app.use(express.static(path.join(__dirname, "public")));
 
-// =============================
-// BASIC PAGE ROUTES (OPTIONAL)
-// =============================
+// Optional: explicit root
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -37,10 +47,12 @@ app.get("/", (req, res) => {
 // API HELPERS
 // =============================
 async function fdFetch(endpoint) {
+  if (!API_TOKEN) {
+    throw new Error("Missing FOOTBALL_DATA_TOKEN env var");
+  }
+
   const res = await fetch(`${FOOTBALL_API}${endpoint}`, {
-    headers: {
-      "X-Auth-Token": API_TOKEN
-    }
+    headers: { "X-Auth-Token": API_TOKEN },
   });
 
   if (!res.ok) {
@@ -50,77 +62,59 @@ async function fdFetch(endpoint) {
 
   return res.json();
 }
-function readManualFixtures() {
-  try {
-    const p = path.join(__dirname, "public", "data", "manual-fixtures.json");
-    const raw = fs.readFileSync(p, "utf8");
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed.matches) ? parsed.matches : [];
-  } catch {
-    return [];
-  }
-}
 
-function isUpcoming(m) {
-  const t = new Date(m.utcDate).getTime();
-  return Number.isFinite(t) && t > Date.now() && (m.status === "SCHEDULED" || m.status === "TIMED");
-}
+async function cached(endpoint, key, ttlMs) {
+  const cachedValue = cacheGet(key);
+  if (cachedValue) return cachedValue;
 
+  const data = await fdFetch(endpoint);
+  cacheSet(key, data, ttlMs);
+  return data;
+}
 
 // =============================
 // API ROUTES
 // =============================
 
-// Get Newcastle United team ID
-app.get("/api/team", async (req, res) => {
-  try {
-    const data = await fdFetch("/teams?name=Newcastle");
-    const team = data.teams?.[0];
-    res.json(team);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-app.get("/api/manual-fixtures", (req, res) => {
-  res.json(readManualFixtures());
-});
-
 // Next Newcastle match
 app.get("/api/next-match", async (req, res) => {
   try {
-    const data = await fdFetch("/teams/67/matches?status=SCHEDULED&limit=1");
+    // Cache scheduled match briefly
+    const data = await cached(
+      `/teams/${NUFC_TEAM_ID}/matches?status=SCHEDULED&limit=1`,
+      "nufc_next_match",
+      60 * 1000
+    );
     res.json(data.matches?.[0] || null);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Live Newcastle matches
-app.get("/api/next-match", async (req, res) => {
+// Newcastle live matches
+app.get("/api/live", async (req, res) => {
   try {
-    // 1) API next scheduled match
-    let apiMatch = null;
-    try {
-      const api = await fdFetch("/teams/67/matches?status=SCHEDULED&limit=1");
-      apiMatch = api.matches?.[0] || null;
-    } catch {
-      apiMatch = null;
-    }
+    // Cache very short while live (so you can refresh often)
+    const data = await cached(
+      `/teams/${NUFC_TEAM_ID}/matches?status=LIVE`,
+      "nufc_live",
+      15 * 1000
+    );
+    res.json(data.matches || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    // 2) Manual upcoming match (earliest)
-    const manualMatches = readManualFixtures().filter(isUpcoming);
-    manualMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
-    const manualNext = manualMatches[0] || null;
-
-    // 3) Pick whichever is sooner
-    if (!apiMatch && !manualNext) return res.json(null);
-    if (!apiMatch) return res.json(manualNext);
-    if (!manualNext) return res.json(apiMatch);
-
-    const apiTime = new Date(apiMatch.utcDate).getTime();
-    const manTime = new Date(manualNext.utcDate).getTime();
-
-    return res.json(manTime < apiTime ? manualNext : apiMatch);
+// ✅ NEW: All Premier League live matches (IN_PLAY + PAUSED + LIVE)
+app.get("/api/pl-live", async (req, res) => {
+  try {
+    const data = await cached(
+      `/competitions/PL/matches?status=IN_PLAY,PAUSED,LIVE`,
+      "pl_live",
+      15 * 1000
+    );
+    res.json(data.matches || []);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -129,44 +123,47 @@ app.get("/api/next-match", async (req, res) => {
 // Premier League table
 app.get("/api/table", async (req, res) => {
   try {
-    const data = await fdFetch("/competitions/PL/standings");
+    // Table can be cached longer
+    const data = await cached(
+      `/competitions/PL/standings`,
+      "pl_table",
+      5 * 60 * 1000
+    );
     res.json(data.standings?.[0]?.table || []);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-app.get("/health", (req, res) => {
-  res.json({
-    ok: true,
-    port: PORT,
-    hasToken: Boolean(API_TOKEN),
-  });
-});
-// Next 5 scheduled matches
-app.get("/api/upcoming", async (req, res) => {
+
+// Fixtures page: next 5 + previous 2 (auto)
+// Returns: { next: [...], previous: [...] }
+app.get("/api/fixtures", async (req, res) => {
   try {
-    const limit = Number(req.query.limit || 5);
-    const data = await fdFetch(`/teams/67/matches?status=SCHEDULED&limit=${limit}`);
-    res.json(data.matches || []);
+    // Pull a chunk of scheduled and finished matches and slice them
+    const [scheduledData, finishedData] = await Promise.all([
+      cached(
+        `/teams/${NUFC_TEAM_ID}/matches?status=SCHEDULED&limit=10`,
+        "nufc_sched_10",
+        60 * 1000
+      ),
+      cached(
+        `/teams/${NUFC_TEAM_ID}/matches?status=FINISHED&limit=10`,
+        "nufc_finished_10",
+        5 * 60 * 1000
+      ),
+    ]);
+
+    const next = (scheduledData.matches || []).slice(0, 5);
+    const previous = (finishedData.matches || []).slice(0, 2);
+
+    res.json({ next, previous });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-
-// Previous 2 finished matches
-app.get("/api/recent", async (req, res) => {
-  try {
-    const limit = Number(req.query.limit || 2);
-    const data = await fdFetch(`/teams/67/matches?status=FINISHED&limit=${limit}`);
-    res.json(data.matches || []);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 
 // =============================
-// FALLBACK (404)
+// 404 FALLBACK
 // =============================
 app.use((req, res) => {
   res.status(404).send("Not Found");

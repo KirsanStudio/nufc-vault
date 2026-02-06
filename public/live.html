@@ -1,86 +1,107 @@
 <!doctype html>
 <html lang="en">
 <head>
-<link rel="icon" href="/favicon.ico">
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NUFC Vault • Live Scores</title>
-  <meta name="description" content="Live score page for Newcastle United matches." />
+  <meta name="description" content="Live score page for Newcastle United matches, plus Premier League live scores." />
+
   <link rel="stylesheet" href="assets/css/styles.css" />
+
   <script defer src="assets/js/main.js"></script>
   <script defer src="assets/js/ticker.js"></script>
   <script defer src="assets/js/matchday.js"></script>
   <script defer src="assets/js/easter-eggs.js"></script>
   <script defer src="assets/js/live.js"></script>
 </head>
+
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
-  <div class="container header-inner">
+    <div class="container header-inner">
 
-    <a class="brand" href="index.html" aria-label="Homepage">
-      <span class="brand-badge">NUFC</span>
-      <span class="brand-text">Vault • Matchday Edition</span>
-    </a>
+      <a class="brand" href="index.html" aria-label="Homepage">
+        <span class="brand-badge">NUFC</span>
+        <span class="brand-text">Vault • Matchday Edition</span>
+      </a>
 
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span class="sr-only">Toggle menu</span>
-      <span class="hamburger" aria-hidden="true"></span>
-    </button>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Toggle menu</span>
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
 
-    <nav id="site-nav" class="site-nav" aria-label="Primary">
-      <a class="nav-link" href="index.html">Home</a>
-      <a class="nav-link" href="next.html">Next Match</a>
-      <a class="nav-link" href="fixtures.html">Fixtures</a>
-      <a class="nav-link" href="table.html">PL Table</a>
-	  <a class="nav-link" href="classic.html">Classic Matches</a>
-	  <a class="nav-link is active" href="live.html">Live Scores</a>
-	  <a class="nav-link" href="history.html">Club History</a>
-	  <a class="nav-link" href="rawfpl.html">RAW FPL</a>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="next.html">Next Match</a>
+        <a class="nav-link" href="fixtures.html">Fixtures</a>
+        <a class="nav-link" href="table.html">PL Table</a>
+        <a class="nav-link" href="classic.html">Classic Matches</a>
+        <a class="nav-link is-active" href="live.html">Live Scores</a>
+        <a class="nav-link" href="history.html">Club History</a>
+        <a class="nav-link" href="rawfpl.html">RAW FPL</a>
+      </nav>
 
-    </nav>
+      <div class="matchday-ticker" id="matchdayTicker" aria-live="polite">
+        <span class="ticker-dot" aria-hidden="true"></span>
+        <span class="ticker-text" id="tickerText">Loading next match…</span>
+        <span class="ticker-time" id="tickerTime">—</span>
+      </div>
 
-    <div class="matchday-ticker" id="matchdayTicker" aria-live="polite">
-      <span class="ticker-dot" aria-hidden="true"></span>
-      <span class="ticker-text" id="tickerText">Loading next match…</span>
-      <span class="ticker-time" id="tickerTime">—</span>
     </div>
-
-  </div>
-</header>
-
-
-<main id="main" class="container page">
-
-  <header class="page-head">
-    <h1>Live Scores</h1>
-    <p class="lede">Live Newcastle United matches.</p>
   </header>
 
-  <!-- Status bar -->
-  <div class="row" style="margin-bottom:14px">
-    <div>
-      <strong id="statusText">Loading…</strong>
-      <span class="muted small" id="autoRefreshPill"></span>
-    </div>
-    <div class="right">
-      <button id="refreshBtn" class="button button-small">Refresh</button>
-    </div>
-  </div>
+  <main id="main" class="container page">
 
-  <!-- JS injects match tiles here -->
-  <section id="matchesList" class="match-grid"></section>
-  
-  <footer class="site-footer">
+    <header class="page-head">
+      <h1>Live Scores</h1>
+      <p class="lede">Newcastle United live matches at the top — Premier League live scores underneath.</p>
+    </header>
+
+    <!-- =========================
+         NEWCASTLE LIVE (TOP)
+    ========================== -->
+    <section class="section">
+      <div class="row">
+        <div>
+          <h2 class="card-title">Newcastle United — Live</h2>
+          <p id="liveStatus" class="muted">Loading…</p>
+        </div>
+        <div class="right">
+          <button id="refreshLive" class="button button-small" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div id="liveGrid" class="match-grid" style="margin-top:12px;"></div>
+    </section>
+
+    <!-- =========================
+         PREMIER LEAGUE LIVE (UNDER)
+    ========================== -->
+    <section class="section">
+      <div class="row">
+        <div>
+          <h2 class="card-title">Premier League Live Scores</h2>
+          <p id="plLiveStatus" class="muted">Loading…</p>
+        </div>
+        <div class="right">
+          <button id="refreshPLLive" class="button button-small" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div id="plLiveGrid" class="match-grid" style="margin-top:12px;"></div>
+    </section>
+
+    <footer class="site-footer">
       <p>© <span id="year"></span> NUFC Vault (a KingKirb & Son site)</p>
     </footer>
-</main>
 
+  </main>
 </body>
 </html>
