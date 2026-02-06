@@ -35,27 +35,48 @@ p{margin:0 0 12px}
 
 .skip-link{position:absolute;left:-9999px;top:auto;}
 .skip-link:focus{
-  left:14px;top:14px;z-index:999;
+  left:14px;top:14px;z-index:99999;
   background:#fff;color:#000;
   padding:10px 12px;border-radius:12px;
 }
 
-/* Header */
+.sr-only{position:absolute;left:-9999px}
+
+/* =========================
+   HEADER
+========================= */
 .site-header{
-  position:sticky;top:0;z-index:50;
+  position:sticky;
+  top:0;
+  z-index:9999;
   border-bottom:1px solid var(--line);
   background: rgba(7,9,12,.75);
   backdrop-filter: blur(14px);
 }
-.header-inner{display:flex;align-items:center;justify-content:space-between;gap:14px}
+
+.header-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
 
 /* Brand */
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.4px}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  letter-spacing:.4px;
+  flex: 0 0 auto;
+}
 
-/* Readable badge */
 .brand-badge{
-  display:inline-flex;align-items:center;justify-content:center;
-  height:34px; padding:0 14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:34px;
+  padding:0 14px;
   border-radius:999px;
   background:#fff;
   color:#000;
@@ -81,88 +102,62 @@ p{margin:0 0 12px}
 .brand-text{opacity:.95}
 
 /* Nav */
-.site-nav{display:flex;align-items:center;gap:8px}
+.site-nav{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
 .nav-link{
-  padding:10px 12px;border-radius:999px;
+  padding:10px 12px;
+  border-radius:999px;
   color:var(--muted);
   border:1px solid transparent;
+  white-space:nowrap;
 }
+
 .nav-link:hover{
   color:var(--text);
   background: rgba(255,255,255,.06);
   border-color: rgba(255,255,255,.10);
 }
+
 .nav-link.is-active{
   color:#000;
   background:#fff;
   border-color: rgba(255,255,255,.20);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
 }
 
 .nav-toggle{
-  display:none;background:rgba(255,255,255,.04);
+  display:none;
+  background:rgba(255,255,255,.04);
   border:1px solid var(--line);
   border-radius:999px;
-  padding:10px 12px;color:var(--text);
+  padding:10px 12px;
+  color:var(--text);
+  flex: 0 0 auto;
 }
-.hamburger{display:inline-block;width:18px;height:2px;background:var(--text);position:relative}
-.hamburger:before,.hamburger:after{content:"";position:absolute;left:0;width:18px;height:2px;background:var(--text)}
+
+.hamburger{
+  display:inline-block;
+  width:18px;
+  height:2px;
+  background:var(--text);
+  position:relative
+}
+.hamburger:before,.hamburger:after{
+  content:"";
+  position:absolute;
+  left:0;
+  width:18px;
+  height:2px;
+  background:var(--text)
+}
 .hamburger:before{top:-6px}
 .hamburger:after{top:6px}
-.sr-only{position:absolute;left:-9999px}
-/* =========================
-   Dropdown (fix click issues)
-   ========================= */
-
-.site-header { position: sticky; top: 0; z-index: 9999; } /* make header top layer */
-
-.site-nav { position: relative; z-index: 10000; }          /* keep nav above header effects */
-
-.nav-dropdown { position: relative; }
-
-.nav-menu{
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  min-width: 220px;
-  padding: 10px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(7,9,12,.96);
-  box-shadow: 0 18px 60px rgba(0,0,0,.55);
-
-  display: none;            /* hidden by default */
-  z-index: 20000;           /* IMPORTANT: above everything */
-  pointer-events: auto;     /* IMPORTANT: allow clicks */
-}
-
-.nav-menu a{
-  display: block;
-  padding: 10px 12px;
-  border-radius: 12px;
-  color: rgba(245,247,251,.86);
-  border: 1px solid transparent;
-}
-
-.nav-menu a:hover{
-  background: rgba(255,255,255,.06);
-  border-color: rgba(255,255,255,.10);
-  color: rgba(245,247,251,1);
-}
-
-/* show when JS toggles aria-expanded */
-.nav-dropdown .nav-dropbtn[aria-expanded="true"] + .nav-menu{
-  display: block;
-}
-
-/* On mobile, dropdown should be normal flow */
-@media (max-width: 860px){
-  .nav-menu{
-    position: static;
-    margin-top: 8px;
-    min-width: 0;
-  }
-}
-
 
 /* Matchday ticker */
 .matchday-ticker{
@@ -177,7 +172,9 @@ p{margin:0 0 12px}
   color: rgba(245,247,251,.86);
   font-size:.92rem;
   white-space:nowrap;
+  flex: 0 0 auto;
 }
+
 .ticker-dot{
   width:10px;height:10px;border-radius:999px;
   background:#fff;
@@ -194,7 +191,9 @@ p{margin:0 0 12px}
   font-weight:900;
 }
 
-/* Hero */
+/* =========================
+   HERO + BUTTONS
+========================= */
 .hero{
   position:relative;
   margin-top:14px;
@@ -251,10 +250,17 @@ h1{
   letter-spacing:-.5px;
   margin-bottom:10px;
 }
-.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 8px}
+.hero-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:16px 0 8px
+}
 
 .button{
-  display:inline-flex;align-items:center;justify-content:center;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   padding:12px 16px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.18);
@@ -283,6 +289,9 @@ h1{
   font-size:.92rem;
 }
 
+/* =========================
+   LAYOUT HELPERS
+========================= */
 .card{
   border:1px solid var(--line);
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
@@ -327,6 +336,7 @@ h1{
   background: rgba(0,0,0,.25);
 }
 
+/* Video embeds */
 .video{
   position:relative;
   padding-top:56.25%;
@@ -335,7 +345,13 @@ h1{
   border:1px solid var(--line);
   box-shadow: 0 18px 60px rgba(0,0,0,.55);
 }
-.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video iframe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0
+}
 
 /* Live tiles */
 .row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
@@ -382,34 +398,9 @@ h1{
   padding-top:16px;
 }
 
-/* Mobile */
-@media (max-width: 860px){
-  .hero-inner{grid-template-columns:1fr}
-  .grid-3{grid-template-columns:1fr}
-  .grid-2{grid-template-columns:1fr}
-  .match-grid{grid-template-columns:1fr}
-
-  .nav-toggle{display:inline-flex}
-  .site-nav{
-    display:none;
-    position:absolute;
-    right:18px;
-    top:68px;
-    flex-direction:column;
-    min-width:230px;
-    background: rgba(7,9,12,.96);
-    border:1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding:10px;
-    box-shadow: var(--shadow);
-  }
-  .site-nav.is-open{display:flex}
-  .nav-link{width:100%}
-
-  /* Hide ticker on mobile to keep header clean */
-  .matchday-ticker{display:none;}
-}
-/* ===== Premier League Table ===== */
+/* =========================
+   PREMIER LEAGUE TABLE
+========================= */
 .table-wrap{
   overflow:auto;
   border:1px solid rgba(255,255,255,.10);
@@ -454,257 +445,36 @@ h1{
   background: rgba(255,255,255,.06);
   outline: 1px solid rgba(255,255,255,.10);
 }
+
 /* =========================
-   MATCHDAY MODE
+   MOBILE
 ========================= */
-
-html.matchday body {
-  background:
-    radial-gradient(900px 500px at 50% -10%, rgba(255,255,255,.12), transparent 60%),
-    linear-gradient(180deg, #050608 0%, #0b0d12 100%);
-}
-
-/* Big faint NUFC logo */
-html.matchday body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("https://crests.football-data.org/67.png");
-  background-repeat: no-repeat;
-  background-position: center 35%;
-  background-size: min(70vw, 520px);
-  opacity: 0.035;
-  filter: grayscale(1) contrast(1.2);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Stadium light glow */
-html.matchday body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(700px 280px at 50% 0%, rgba(255,255,255,.08), transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Lift content above background */
-html.matchday .site-header,
-html.matchday main,
-html.matchday footer {
-  position: relative;
-  z-index: 1;
-}
-
-/* Matchday pill in header */
-.matchday-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #fff;
-  color: #000;
-  font-weight: 1000;
-  font-size: .75rem;
-  letter-spacing: .8px;
-  box-shadow: 0 0 22px rgba(255,255,255,.35);
-}
-
-/* Subtle ticker pulse */
-html.matchday #matchdayTicker {
-  animation: pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 rgba(255,255,255,.0); }
-  50% { box-shadow: 0 0 26px rgba(255,255,255,.25); }
-  100% { box-shadow: 0 0 0 rgba(255,255,255,.0); }
-}
-
-/* ===== Cleaner Nav (Desktop + Dropdown) ===== */
-.site-nav{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:6px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.20);
-}
-
-.nav-link{
-  padding:9px 12px;
-  font-size:.92rem;
-  line-height:1;
-  white-space:nowrap;
-}
-
-.nav-link.is-active{
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
-}
-
-/* Dropdown */
-.nav-dropdown{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-}
-
-.nav-dropbtn{
-  background: transparent;
-  cursor:pointer;
-}
-
-.nav-menu{
-  position:absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  min-width: 210px;
-  padding:10px;
-  border-radius: 18px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(7,9,12,.96);
-  box-shadow: 0 18px 60px rgba(0,0,0,.65);
-  display:none;
-  z-index: 999;
-}
-
-.nav-menu a{
-  display:block;
-  padding:10px 12px;
-  border-radius: 14px;
-  color: rgba(245,247,251,.82);
-  border:1px solid transparent;
-}
-
-.nav-menu a:hover{
-  color: rgba(245,247,251,.95);
-  background: rgba(255,255,255,.06);
-  border-color: rgba(255,255,255,.10);
-}
-
-.nav-dropdown.is-open .nav-menu{
-  display:block;
-}
-
-/* Make header less cramped */
-.header-inner{
-  gap: 12px;
-}
-
-.matchday-ticker{
-  margin-left: 10px;
-}
-
-/* ===== Mobile fix for new navbar ===== */
 @media (max-width: 860px){
+  .hero-inner{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .match-grid{grid-template-columns:1fr}
 
-  /* When the hamburger menu opens, make it a proper panel again */
-  .site-nav{
-    background: rgba(7,9,12,.96) !important;
-    border: 1px solid rgba(255,255,255,.12) !important;
-    border-radius: var(--r-lg) !important;
-    padding: 10px !important;
-    gap: 8px !important;
-    align-items: stretch !important;
-  }
+  .nav-toggle{display:inline-flex}
 
-  .nav-link{
-    width: 100%;
-    text-align: left;
-    padding: 12px 14px;
-  }
-
-  /* On mobile: remove the "More ▾" button and just show its links */
-  .nav-dropdown{
-    width: 100%;
-  }
-
-  .nav-dropbtn{
-    display: none !important;
-  }
-
-  .nav-menu{
-    position: static !important;
-    display: block !important;
-    min-width: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-  }
-
-  .nav-menu a{
-    width: 100%;
-    display: block;
-    padding: 12px 14px;
-    border-radius: 999px;
-  }
-}
-/* ===== Mobile nav fix ===== */
-.nav-dropdown { position: relative; }
-
-.nav-menu{
-  display:none;
-  position:absolute;
-  right:0;
-  top:44px;
-  min-width: 200px;
-  padding:10px;
-  border-radius: 16px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(7,9,12,.96);
-  box-shadow: 0 16px 60px rgba(0,0,0,.55);
-  z-index: 60;
-}
-
-.nav-menu a{
-  display:block;
-  padding:10px 12px;
-  border-radius: 12px;
-  color: rgba(245,247,251,.86);
-}
-.nav-menu a:hover{
-  background: rgba(255,255,255,.06);
-  color: rgba(245,247,251,.98);
-}
-
-/* show dropdown when button is expanded */
-.nav-dropbtn[aria-expanded="true"] + .nav-menu{
-  display:block;
-}
-
-/* Mobile rules */
-@media (max-width: 860px){
-  /* nav hidden by default on mobile */
+  /* Hide nav by default on mobile, show when .is-open is set by JS */
   .site-nav{
     display:none;
     position:absolute;
     right:18px;
     top:68px;
     flex-direction:column;
-    min-width:230px;
+    min-width:240px;
     background: rgba(7,9,12,.96);
-    border:1px solid rgba(255,255,255,.12);
-    border-radius: 22px;
+    border:1px solid var(--line);
+    border-radius: var(--r-lg);
     padding:10px;
-    box-shadow: 0 16px 60px rgba(0,0,0,.55);
-    z-index: 55;
+    box-shadow: var(--shadow);
+    z-index: 99999;
   }
+  .site-nav.is-open{display:flex}
+  .nav-link{width:100%}
 
-  .site-nav.is-open{ display:flex; }
-
-  /* dropdown becomes inline-friendly on mobile */
-  .nav-dropdown{ width:100%; }
-  .nav-dropbtn{ width:100%; text-align:left; }
-
-  .nav-menu{
-    position: static;
-    width:100%;
-    min-width: unset;
-    margin-top: 8px;
-  }
+  /* Hide ticker on mobile to keep header clean */
+  .matchday-ticker{display:none;}
 }
