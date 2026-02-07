@@ -53,43 +53,50 @@
     }
   }
 
-  function tile(match, showCompetition = true) {
-    const home = match.homeTeam || {};
-    const away = match.awayTeam || {};
-    const status = match.status || "—";
-    const comp = match.competition?.name || match.competition?.code || "Match";
+function tile(match, showCompetition = true) {
+  const home = match.homeTeam || {};
+  const away = match.awayTeam || {};
+  const status = match.status || "—";
+  const comp = match.competition?.name || match.competition?.code || "Match";
 
-    return `
-      <article class="match-tile">
-        <div class="row">
-          <div>
-            ${badgeHTML(status)}
-            <p class="muted small" style="margin-top:8px">
-              ${showCompetition ? `${comp} • ` : ""}${fmtWhen(match)}
-            </p>
-          </div>
+  // ✅ Detect NUFC (team id = 67)
+  const isNUFC = home?.id === 67 || away?.id === 67;
+
+  return `
+    <article class="match-tile ${isNUFC ? "nufc-live" : ""}">
+      <div class="row">
+        <div>
+          ${badgeHTML(status)}
+          <p class="muted small" style="margin-top:8px">
+            ${showCompetition ? `${comp} • ` : ""}${fmtWhen(match)}
+          </p>
+        </div>
+      </div>
+
+      <!-- ✅ BIG centred score -->
+      <div class="${isNUFC ? "score-hero" : "scoreline"}">${scoreText(match)}</div>
+
+      <!-- ✅ Teams underneath, centered -->
+      <div class="${isNUFC ? "teams-row" : "row"}" style="${isNUFC ? "" : "gap:18px; margin-top:10px;"}">
+        <div class="${isNUFC ? "team" : ""}" style="${isNUFC ? "" : "display:flex;align-items:center;gap:10px;"}">
+          <img src="${safeCrest(home)}" alt="" width="${isNUFC ? "30" : "26"}" height="${isNUFC ? "30" : "26"}"
+            style="border-radius:6px;background:rgba(255,255,255,.08);padding:2px" />
+          <strong>${safeTeamName(home)}</strong>
         </div>
 
-        <div class="scoreline">${scoreText(match)}</div>
+        <div class="${isNUFC ? "vs" : ""}" style="${isNUFC ? "" : "opacity:.75;font-weight:900;"}">vs</div>
 
-        <div class="row" style="gap:18px; margin-top:10px;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <img src="${safeCrest(home)}" alt="" width="26" height="26"
-              style="border-radius:6px;background:rgba(255,255,255,.08);padding:2px" />
-            <strong>${safeTeamName(home)}</strong>
-          </div>
-
-          <div style="opacity:.75;font-weight:900;">vs</div>
-
-          <div style="display:flex;align-items:center;gap:10px;">
-            <img src="${safeCrest(away)}" alt="" width="26" height="26"
-              style="border-radius:6px;background:rgba(255,255,255,.08);padding:2px" />
-            <strong>${safeTeamName(away)}</strong>
-          </div>
+        <div class="${isNUFC ? "team" : ""}" style="${isNUFC ? "" : "display:flex;align-items:center;gap:10px;"}">
+          <img src="${safeCrest(away)}" alt="" width="${isNUFC ? "30" : "26"}" height="${isNUFC ? "30" : "26"}"
+            style="border-radius:6px;background:rgba(255,255,255,.08);padding:2px" />
+          <strong>${safeTeamName(away)}</strong>
         </div>
-      </article>
-    `;
-  }
+      </div>
+
+      ${isNUFC ? `<div class="live-pill">TOON LIVE</div>` : ""}
+    </article>
+  `;
+}
 
   function emptyTile(message) {
     return `
